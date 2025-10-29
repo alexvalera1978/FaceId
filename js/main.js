@@ -87,7 +87,9 @@ class FacialRecognitionApp {
     }
 
     async processFace(detection) {
+        console.log('Entrando a processFace...');
         const descriptor = Array.from(detection.descriptor);
+        console.log('Descriptor extraído:', descriptor.length);
         const landmarks = detection.landmarks.positions.length;
         const elapsedTime = ((Date.now() - this.scanStartTime) / 1000).toFixed(1);
         
@@ -103,7 +105,9 @@ class FacialRecognitionApp {
         this.faceDetector.drawLandmarks(this.canvas, detection);
 
         // Buscar en BD
+        console.log('Buscando en BD...');
         const match = this.database.findMatch(descriptor);
+        console.log('Resultado match:', match);
         
         if (match && match.person.name) {
             // Persona conocida con nombre
@@ -186,4 +190,5 @@ window.addEventListener('DOMContentLoaded', () => {
     app.init();
 
 });
+
 
