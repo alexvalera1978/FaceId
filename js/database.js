@@ -47,7 +47,9 @@ export class Database {
         if (match) {
             // Añadir a persona existente
             const person = match.person;
+            console.log('[DB] Añadiendo descriptor a persona existente. Antes:', person.descriptors.length);
             person.descriptors.push(descriptor);
+            console.log('[DB] Después:', person.descriptors.length);
             person.lastSeen = Date.now();
             this.save(people);
             return person;
@@ -109,4 +111,5 @@ export class Database {
             unnamed: people.filter(p => !p.name).length
         };
     }
+
 }
