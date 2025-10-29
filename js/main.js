@@ -20,13 +20,12 @@ class FacialRecognitionApp {
         this.scanStartTime = 0;
         this.currentPerson = null;
         this.lastDetectionTime = 0;
-        this.cooldownPeriod = 3000; // 3 segundos entre detecciones
+        this.cooldownPeriod = 3000;
     }
 
     async init() {
         console.log('Inicializando sistema...');
         
-        // Cargar modelos
         this.ui.showScreen('idle');
         const modelsLoaded = await this.faceDetector.loadModels();
         
@@ -35,7 +34,6 @@ class FacialRecognitionApp {
             return;
         }
 
-        // Iniciar cámara
         const cameraStarted = await this.camera.start();
         
         if (!cameraStarted) {
@@ -53,7 +51,6 @@ class FacialRecognitionApp {
                 const now = Date.now();
                 const timeSinceLastDetection = now - this.lastDetectionTime;
                 
-                // Solo detectar si ha pasado el cooldown
                 if (timeSinceLastDetection < this.cooldownPeriod) {
                     return;
                 }
@@ -74,37 +71,37 @@ class FacialRecognitionApp {
         this.scanStartTime = Date.now();
         console.log('isProcessing cambiado a true');
         
-        // Cambiar a pantalla de análisis
         console.log('Cambiando a pantalla scan...');
         this.ui.showScreen('scan');
         console.log('Pantalla cambiada');
         this.ui.setCanvasSize(this.canvas, this.camera.video);
         
-        // Animación de búsqueda
         this.ui.animateSearch(1500);
         
-        // Detectar cara
         console.log('Iniciando detección de cara...');
         const detection = await this.faceDetector.detectFace(this.camera.video);
         console.log('Detección completada:', detection ? 'CARA ENCONTRADA' : 'SIN CARA');
         
         if (detection) {
+            console.log('Llamando a processFace...');
             await this.processFace(detection);
         } else {
             console.log('No se detectó cara');
             this.ui.showNoMatch();
             setTimeout(() => {
                 this.resetToIdle();
-            }, 3000); // 3 segundos
+            }, 3000);
         }
     }
 
     async processFace(detection) {
+        console.log('=== ENTRANDO A PROCESSFACE ===');
+        console.log('Detection válido:', !!detection);
         const descriptor = Array.from(detection.descriptor);
+        console.log('Descriptor extraído:', descriptor.length, 'números');
         const landmarks = detection.landmarks.positions.length;
         const elapsedTime = ((Date.now() - this.scanStartTime) / 1000).toFixed(1);
         
-        // Actualizar info de escaneo
         this.ui.updateScanInfo({
             status: 'PROCESANDO',
             points: landmarks,
@@ -112,31 +109,33 @@ class FacialRecognitionApp {
             time: elapsedTime
         });
 
-        // Dibujar landmarks
         this.faceDetector.drawLandmarks(this.canvas, detection);
 
-        // Buscar en BD
+        console.log('Buscando en BD...');
         const match = this.database.findMatch(descriptor);
+        console.log('Match encontrado:', match ? 'SÍ (persona: ' + (match.person.name || match.person.id) + ')' : 'NO');
         
         if (match && match.person.name) {
-            // Persona conocida con nombre
+            console.log('Persona conocida con nombre');
             await this.greetPerson(match.person, match.distance);
         } else if (match && !match.person.name) {
-            // Persona sin nombre pero con suficientes muestras
+            console.log('Persona reconocida sin nombre');
             this.currentPerson = match.person;
             
             if (this.database.hasEnoughSamples(match.person)) {
+                console.log('Suficientes muestras, pidiendo nombre');
                 await this.requestName(match.person);
             } else {
+                console.log('Insuficientes muestras:', match.person.descriptors.length, 'de', this.database.minSamples);
                 this.ui.showMatchResult(null, 0);
-                setTimeout(() => this.resetToIdle(), 3000); // 3 segundos
+                setTimeout(() => this.resetToIdle(), 3000);
             }
         } else {
-            // Persona nueva
+            console.log('Persona nueva, añadiendo a BD');
             const newPerson = this.database.addDescriptor(descriptor);
             this.ui.showNoMatch();
             console.log('Nueva persona detectada:', newPerson.id);
-            setTimeout(() => this.resetToIdle(), 3000); // 3 segundos para ver el mensaje
+            setTimeout(() => this.resetToIdle(), 3000);
         }
     }
 
@@ -152,7 +151,6 @@ class FacialRecognitionApp {
         
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        // Saludar
         this.voice.speak(`¡Hola ${person.name}! Bienvenido`);
         this.ui.showGreeting(person.name);
         
@@ -177,7 +175,7 @@ class FacialRecognitionApp {
         } catch (err) {
             console.error('Error capturando nombre:', err);
             this.ui.updateVoiceStatus('❌ No te escuché bien. Inténtalo de nuevo más tarde.');
-            setTimeout(() => this.resetToIdle(), 3000); // 3 segundos
+            setTimeout(() => this.resetToIdle(), 3000);
         }
     }
 
@@ -186,19 +184,16 @@ class FacialRecognitionApp {
         this.isProcessing = false;
         this.currentPerson = null;
         this.motionDetector.reset();
-        this.lastDetectionTime = Date.now(); // Cooldown empieza AHORA
+        this.lastDetectionTime = Date.now();
         
-        // Limpiar canvas
         const ctx = this.canvas.getContext('2d');
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Volver a pantalla idle
         this.ui.showScreen('idle');
         console.log('Sistema en espera, cooldown activo por', this.cooldownPeriod / 1000, 'segundos');
     }
 }
 
-// Iniciar app cuando cargue la página
 window.addEventListener('DOMContentLoaded', () => {
     const app = new FacialRecognitionApp();
     app.init();
