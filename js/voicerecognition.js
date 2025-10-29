@@ -24,30 +24,39 @@ export class VoiceRecognition {
     async askForName() {
         return new Promise((resolve, reject) => {
             if (!this.recognition) {
+                console.error('[VOICE] Reconocimiento no disponible');
                 reject('Reconocimiento no disponible');
                 return;
             }
 
+            console.log('[VOICE] Iniciando escucha...');
             this.isListening = true;
 
             this.recognition.onresult = (event) => {
+                console.log('[VOICE] Resultado recibido:', event.results);
                 const name = event.results[0][0].transcript;
+                console.log('[VOICE] Nombre capturado:', name);
                 this.isListening = false;
                 resolve(this.cleanName(name));
             };
 
             this.recognition.onerror = (event) => {
+                console.error('[VOICE] Error:', event.error);
                 this.isListening = false;
                 reject(event.error);
             };
 
             this.recognition.onend = () => {
+                console.log('[VOICE] Reconocimiento finalizado');
                 this.isListening = false;
             };
 
             try {
+                console.log('[VOICE] Llamando a start()...');
                 this.recognition.start();
+                console.log('[VOICE] Start() ejecutado');
             } catch (err) {
+                console.error('[VOICE] Error en start():', err);
                 reject(err);
             }
         });
