@@ -45,28 +45,28 @@ export class Database {
         const match = this.findMatch(descriptor);
         
         if (match) {
-            // Añadir a persona existente
-            const person = match.person;
-            console.log('[DB] Añadiendo descriptor a persona existente. Antes:', person.descriptors.length);
-            person.descriptors.push(descriptor);
-            console.log('[DB] Después:', person.descriptors.length);
-            person.lastSeen = Date.now();
-            this.save(people);
-            return person;
-        } else {
-            // Crear nueva persona desconocida
-            const newPerson = {
-                id: 'person_' + Date.now(),
-                name: name || null,
-                descriptors: [descriptor],
-                created: Date.now(),
-                lastSeen: Date.now(),
-                needsName: !name
-            };
-            people.push(newPerson);
-            this.save(people);
-            return newPerson;
+            // Encontrar la persona en el array people actual (no el del match)
+            const person = people.find(p => p.id === match.person.id);
+            if (person) {
+                person.descriptors.push(descriptor);
+                person.lastSeen = Date.now();
+                this.save(people);
+                return person;
+            }
         }
+        
+        // Crear nueva persona desconocida
+        const newPerson = {
+            id: 'person_' + Date.now(),
+            name: name || null,
+            descriptors: [descriptor],
+            created: Date.now(),
+            lastSeen: Date.now(),
+            needsName: !name
+        };
+        people.push(newPerson);
+        this.save(people);
+        return newPerson;
     }
 
     // Asignar nombre a persona
@@ -111,5 +111,4 @@ export class Database {
             unnamed: people.filter(p => !p.name).length
         };
     }
-
 }
