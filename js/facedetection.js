@@ -39,7 +39,15 @@ export class FaceDetector {
 
         if (!detection) return;
 
-        const landmarks = detection.landmarks.positions;
+        // CRÍTICO: Ajustar canvas al tamaño del video
+        const displaySize = { width: canvas.width, height: canvas.height };
+        faceapi.matchDimensions(canvas, displaySize);
+
+        // CRÍTICO: Redimensionar detección para que coincida con el canvas
+        const resizedDetection = faceapi.resizeResults(detection, displaySize);
+
+        // Usar landmarks redimensionados
+        const landmarks = resizedDetection.landmarks.positions;
         
         // Dibujar puntos
         ctx.fillStyle = '#00f0ff';
