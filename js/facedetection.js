@@ -2,7 +2,7 @@
 export class FaceDetector {
     constructor() {
         this.modelsLoaded = false;
-        this.modelPath = 'https://justadudewhohacks.github.io/face-api.js/models/';
+        this.modelPath = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
     }
 
     async loadModels() {
