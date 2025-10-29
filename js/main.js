@@ -69,18 +69,24 @@ class FacialRecognitionApp {
     }
 
     async handleMotion() {
+        console.log('=== INICIANDO HANDLEMOTION ===');
         this.isProcessing = true;
         this.scanStartTime = Date.now();
+        console.log('isProcessing cambiado a true');
         
         // Cambiar a pantalla de análisis
+        console.log('Cambiando a pantalla scan...');
         this.ui.showScreen('scan');
+        console.log('Pantalla cambiada');
         this.ui.setCanvasSize(this.canvas, this.camera.video);
         
         // Animación de búsqueda
         this.ui.animateSearch(1500);
         
         // Detectar cara
+        console.log('Iniciando detección de cara...');
         const detection = await this.faceDetector.detectFace(this.camera.video);
+        console.log('Detección completada:', detection ? 'CARA ENCONTRADA' : 'SIN CARA');
         
         if (detection) {
             await this.processFace(detection);
