@@ -120,13 +120,15 @@ class FacialRecognitionApp {
             await this.greetPerson(match.person, match.distance);
         } else if (match && !match.person.name) {
             console.log('Persona reconocida sin nombre');
-            this.currentPerson = match.person;
+            // IMPORTANTE: Añadir este descriptor a la persona existente
+            const updatedPerson = this.database.addDescriptor(descriptor);
+            this.currentPerson = updatedPerson;
             
-            if (this.database.hasEnoughSamples(match.person)) {
+            if (this.database.hasEnoughSamples(updatedPerson)) {
                 console.log('Suficientes muestras, pidiendo nombre');
-                await this.requestName(match.person);
+                await this.requestName(updatedPerson);
             } else {
-                console.log('Insuficientes muestras:', match.person.descriptors.length, 'de', this.database.minSamples);
+                console.log('Insuficientes muestras:', updatedPerson.descriptors.length, 'de', this.database.minSamples);
                 this.ui.showMatchResult(null, 0);
                 setTimeout(() => this.resetToIdle(), 3000);
             }
