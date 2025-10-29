@@ -1,0 +1,59 @@
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Courier New',monospace;background:#0a1628;color:#00f0ff;overflow:hidden;height:100vh}
+
+/* Pantallas */
+.screen{position:absolute;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;flex-direction:column}
+.screen.active{display:flex}
+
+/* Idle Screen */
+#idle-screen{background:linear-gradient(135deg,#0a1628,#1a2838);text-align:center}
+#idle-screen h1{font-size:2.5rem;text-shadow:0 0 20px #00f0ff;animation:pulse 2s infinite}
+#idle-screen p{font-size:1.2rem;margin-top:1rem;opacity:.7}
+
+/* Scan Screen */
+#scan-screen{background:#0d1b2a;flex-direction:row;justify-content:space-between;padding:0}
+#video{position:absolute;width:100%;height:100%;object-fit:cover;opacity:.8}
+#overlay{position:absolute;width:100%;height:100%;pointer-events:none}
+
+/* Esquinas futuristas */
+#scan-screen::before,#scan-screen::after,#overlay::before,#overlay::after{content:'';position:absolute;width:80px;height:80px;border:4px solid #ffa500;z-index:10}
+#scan-screen::before{top:20px;left:20px;border-right:0;border-bottom:0;animation:cornerPulse 1.5s infinite}
+#scan-screen::after{top:20px;right:20px;border-left:0;border-bottom:0;animation:cornerPulse 1.5s infinite .2s}
+#overlay::before{bottom:20px;left:20px;border-right:0;border-top:0;animation:cornerPulse 1.5s infinite .4s}
+#overlay::after{bottom:20px;right:20px;border-left:0;border-top:0;animation:cornerPulse 1.5s infinite .6s}
+
+/* Panel lateral */
+#scan-panel{position:absolute;right:0;top:0;width:320px;height:100%;background:rgba(10,22,40,.95);backdrop-filter:blur(10px);padding:20px;z-index:20;border-left:2px solid #00f0ff;overflow-y:auto}
+#scan-info{font-size:.85rem;line-height:1.8;color:#00f0ff;text-shadow:0 0 5px #00f0ff}
+#scan-info div{margin:8px 0;border-left:2px solid #ffa500;padding-left:10px}
+#match-result{margin-top:30px;padding:15px;background:rgba(0,240,255,.1);border:2px solid #00f0ff;text-align:center;font-size:1.1rem;animation:fadeIn .5s}
+
+/* Greet Screen */
+#greet-screen{background:linear-gradient(135deg,#0a4d3c,#1a2838)}
+#greet-msg{font-size:3rem;text-shadow:0 0 30px #00ff88;animation:zoomIn .8s}
+
+/* Name Screen */
+#name-screen{background:linear-gradient(135deg,#1a2838,#0a1628)}
+#name-screen h2{font-size:2rem;margin-bottom:1rem;color:#ffa500}
+#voice-status{font-size:1.2rem;animation:pulse 1.5s infinite}
+
+/* Animaciones */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes cornerPulse{0%,100%{border-color:#ffa500;transform:scale(1)}50%{border-color:#ff6b00;transform:scale(1.05)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes zoomIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes scanLine{0%{top:-10%}100%{top:110%}}
+@keyframes dotAnim{0%,100%{opacity:0}50%{opacity:1}}
+
+/* Animación de puntos */
+.dots{display:inline-block}
+.dots span{opacity:0;animation:dotAnim 1.4s infinite}
+.dots span:nth-child(1){animation-delay:0s}
+.dots span:nth-child(2){animation-delay:.35s}
+.dots span:nth-child(3){animation-delay:.7s}
+
+/* Línea de escaneo */
+.scan-line{position:absolute;width:100%;height:2px;background:linear-gradient(90deg,transparent,#00f0ff,transparent);animation:scanLine 3s linear infinite;z-index:15;box-shadow:0 0 10px #00f0ff}
+
+/* Responsive */
+@media(max-width:768px){#scan-panel{width:100%;height:40%;top:auto;bottom:0;border-left:0;border-top:2px solid #00f0ff}#scan-screen::before,#scan-screen::after,#overlay::before,#overlay::after{width:50px;height:50px}}

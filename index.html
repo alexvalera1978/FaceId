@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>Reconocimiento Facial</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Pantalla neutral -->
+    <div id="idle-screen" class="screen active">
+        <h1>SISTEMA DE RECONOCIMIENTO</h1>
+        <p>› Esperando detección...</p>
+        <p style="margin-top:2rem;font-size:.9rem;opacity:.5">FACIAL RECOGNITION v2.0</p>
+    </div>
+
+    <!-- Pantalla de análisis -->
+    <div id="scan-screen" class="screen">
+        <video id="video" autoplay muted playsinline></video>
+        <canvas id="overlay"></canvas>
+        <div class="scan-line"></div>
+        
+        <div id="scan-panel">
+            <div id="scan-info">
+                <div>ESTADO: <span id="status">ANALIZANDO</span></div>
+                <div>PUNTOS: <span id="points">0</span></div>
+                <div>CONFIANZA: <span id="confidence">0%</span></div>
+                <div>TIEMPO: <span id="time">0s</span></div>
+            </div>
+            <div id="match-result"></div>
+        </div>
+    </div>
+
+    <!-- Pantalla de saludo -->
+    <div id="greet-screen" class="screen">
+        <h1 id="greet-msg"></h1>
+    </div>
+
+    <!-- Pantalla pregunta nombre -->
+    <div id="name-screen" class="screen">
+        <h2>› IDENTIFICACIÓN REQUERIDA</h2>
+        <p>¿Cuál es tu nombre?</p>
+        <p id="voice-status" style="margin-top:2rem">🎤 Escuchando...</p>
+    </div>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
