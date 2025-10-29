@@ -1,9 +1,9 @@
 // Orquestador principal
 import { Camera } from './camera.js';
-import { MotionDetector } from './motionDetection.js';
-import { FaceDetector } from './faceDetection.js';
+import { MotionDetector } from './motiondetection.js';
+import { FaceDetector } from './facedetection.js';
 import { Database } from './database.js';
-import { VoiceRecognition } from './voiceRecognition.js';
+import { VoiceRecognition } from './voicerecognition.js';
 import { UI } from './ui.js';
 
 class FacialRecognitionApp {
