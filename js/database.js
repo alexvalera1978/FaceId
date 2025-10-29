@@ -2,7 +2,7 @@
 export class Database {
     constructor() {
         this.storageKey = 'faceRecognitionDB';
-        this.threshold = 0.6; // Umbral de distancia para matching
+        this.threshold = 0.4; // Umbral de distancia para matching
         this.minSamples = 5; // Mínimo de muestras para activar saludo
     }
 
@@ -112,3 +112,4 @@ export class Database {
         };
     }
 }
+
