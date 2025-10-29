@@ -70,9 +70,11 @@ class FacialRecognitionApp {
         this.ui.animateSearch(1500);
         
         // Detectar cara
+        console.log('Detection result:', detection);
         const detection = await this.faceDetector.detectFace(this.camera.video);
         
         if (detection) {
+            console.log('Cara detectada, procesando...');
             await this.processFace(detection);
         } else {
             console.log('No se detectó cara');
@@ -181,4 +183,5 @@ class FacialRecognitionApp {
 window.addEventListener('DOMContentLoaded', () => {
     const app = new FacialRecognitionApp();
     app.init();
+
 });
