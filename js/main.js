@@ -62,7 +62,6 @@ class FacialRecognitionApp {
                 
                 if (motionDetected) {
                     console.log('Movimiento detectado');
-                    this.lastDetectionTime = now;
                     this.handleMotion();
                 }
             }
@@ -181,6 +180,7 @@ class FacialRecognitionApp {
         this.isProcessing = false;
         this.currentPerson = null;
         this.motionDetector.reset();
+        this.lastDetectionTime = Date.now(); // Cooldown empieza AHORA
         
         // Limpiar canvas
         const ctx = this.canvas.getContext('2d');
