@@ -1,6 +1,6 @@
 // Detección de movimiento
 export class MotionDetector {
-    constructor(videoElement, threshold = 30, minPixels = 8000) {
+    constructor(videoElement, threshold = 30, minPixels = 2000) {
         this.video = videoElement;
         this.threshold = threshold;
         this.minPixels = minPixels;
@@ -50,4 +50,5 @@ export class MotionDetector {
     }
 
 }
+
 
